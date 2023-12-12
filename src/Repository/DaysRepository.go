@@ -40,12 +40,6 @@ func (dr *DaysRepository) Execute(day int) error {
 	}
 	defer demoFileP1.Close()
 
-	finalFile, err := dr.getInput(day, FinalInput)
-	if err != nil {
-		return fmt.Errorf("error getting input for day %d:%s => %s", day, FinalInput, err)
-	}
-	defer finalFile.Close()
-
 	fmt.Println("----------------------------------------")
 	fmt.Printf("Executing DEMO day%d:%s\n", day, Part1)
 	fmt.Println("----------------------------------------")
@@ -54,6 +48,12 @@ func (dr *DaysRepository) Execute(day int) error {
 		return fmt.Errorf("error executing day %d:%s:%s => %s", day, DemoInput, Part1, errExecute)
 	}
 	fmt.Println()
+
+	finalFile, err := dr.getInput(day, FinalInput)
+	if err != nil {
+		return fmt.Errorf("error getting input for day %d:%s => %s", day, FinalInput, err)
+	}
+	defer finalFile.Close()
 
 	fmt.Println("----------------------------------------")
 	fmt.Printf("Executing FINAL day%d:%s\n", day, Part1)
