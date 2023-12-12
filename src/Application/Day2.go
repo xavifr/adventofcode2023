@@ -8,17 +8,8 @@ import (
 	"strconv"
 )
 
-type d2Set struct {
-	Red, Green, Blue int
-}
-
-type d2Game struct {
-	ID   int
-	Sets []d2Set
-}
-
 type Day2 struct {
-	part1Set d2Set
+	part1Set Domain.D2Set
 }
 
 func (d *Day2) Part1(input *bufio.Scanner) error {
@@ -48,7 +39,7 @@ func (d *Day2) Part2(input *bufio.Scanner) error {
 	for input.Scan() {
 		game := d.getDataFromGame(input.Text())
 
-		minSet := d2Set{}
+		minSet := Domain.D2Set{}
 		for _, set := range game.Sets {
 			minSet.Red = max(minSet.Red, set.Red)
 			minSet.Green = max(minSet.Green, set.Green)
@@ -63,14 +54,14 @@ func (d *Day2) Part2(input *bufio.Scanner) error {
 	return nil
 }
 
-func (d *Day2) getDataFromGame(line string) d2Game {
-	game := d2Game{}
+func (d *Day2) getDataFromGame(line string) Domain.D2Game {
+	game := Domain.D2Game{}
 	gameIdRegex, _ := regexp.Compile("^Game (\\d+): (.*)")
 	setsRegex, _ := regexp.Compile("^([^;]+)(?:; (.*))?")
 
 	gameIdString := gameIdRegex.FindStringSubmatch(line)
 	game.ID, _ = strconv.Atoi(gameIdString[1])
-	game.Sets = []d2Set{}
+	game.Sets = []Domain.D2Set{}
 
 	setsString := gameIdString[2]
 	for {
@@ -88,8 +79,8 @@ func (d *Day2) getDataFromGame(line string) d2Game {
 	return game
 }
 
-func (d *Day2) getSetFromRoll(roll string) (set d2Set) {
-	set = d2Set{}
+func (d *Day2) getSetFromRoll(roll string) (set Domain.D2Set) {
+	set = Domain.D2Set{}
 	setRegex, _ := regexp.Compile("^(\\d+) ([^,]+)(?:, (.*))?$")
 
 	for {
@@ -114,7 +105,7 @@ func (d *Day2) getSetFromRoll(roll string) (set d2Set) {
 }
 
 func NewDay2(Red, Green, Blue int) Domain.Day {
-	return &Day2{part1Set: d2Set{
+	return &Day2{part1Set: Domain.D2Set{
 		Red:   Red,
 		Green: Green,
 		Blue:  Blue,

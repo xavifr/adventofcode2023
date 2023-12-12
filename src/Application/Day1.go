@@ -7,11 +7,6 @@ import (
 )
 
 type Day1 struct {
-	debug bool
-}
-
-func (d *Day1) SetDebug(debug bool) {
-	d.debug = debug
 }
 
 func (d *Day1) Part1(input *bufio.Scanner) error {
