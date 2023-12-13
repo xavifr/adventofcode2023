@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type Day5 struct {
@@ -44,21 +45,39 @@ func (d *Day5) Part1(input *bufio.Scanner) error {
 func (d *Day5) Part2(input *bufio.Scanner) error {
 	d.parseInput(input)
 
-	minLocation := int64(999999999999999999)
-
-	fmt.Printf("#### TODO: Add goroutines for each seed range ####")
-	fmt.Printf("#### ATM it will take up to 4 minutes to run the task ####")
+	numWorkers := len(d.SeedsP2)
+	var wg sync.WaitGroup
+	minReceiver := make(chan int64, numWorkers)
 
 	for _, seedRange := range d.SeedsP2 {
-		fmt.Printf(" - SeedRange %d + %d\n", seedRange.Start, seedRange.Size)
+		wg.Add(1)
+		go func(seedRange Domain.D5SeedRange) {
+			defer wg.Done()
+			localMinLocation := int64(999999999999999999)
+			fmt.Printf(" - SeedRange %d + %d\n", seedRange.Start, seedRange.Size)
 
-		for seed := seedRange.Start; seed < seedRange.Start+seedRange.Size; seed++ {
-			location := d.Humid2Location.Transform(d.Temp2Humid.Transform(d.Light2Temp.Transform(d.Water2Light.Transform(d.Fert2Water.Transform(d.Soil2Fert.Transform(d.Seed2Soil.Transform(seed)))))))
+			for seed := seedRange.Start; seed < seedRange.Start+seedRange.Size; seed++ {
+				location := d.Humid2Location.Transform(d.Temp2Humid.Transform(d.Light2Temp.Transform(d.Water2Light.Transform(d.Fert2Water.Transform(d.Soil2Fert.Transform(d.Seed2Soil.Transform(seed)))))))
 
-			if location < minLocation {
-				fmt.Printf(" * new min!! %d\n", minLocation)
-				minLocation = location
+				if location < localMinLocation {
+					localMinLocation = location
+				}
 			}
+
+			minReceiver <- localMinLocation
+		}(seedRange)
+	}
+
+	go func() {
+		wg.Wait()
+		close(minReceiver)
+	}()
+
+	minLocation := int64(999999999999999999)
+	for chMin := range minReceiver {
+		if chMin < minLocation {
+			fmt.Printf(" * new min!! %d\n", chMin)
+			minLocation = chMin
 		}
 	}
 
