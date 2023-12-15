@@ -80,12 +80,12 @@ func (d *Day3) Part2(input *bufio.Scanner) error {
 				continue
 			}
 
-			fmt.Printf("Found possible gear at %d:%d\n", y, x)
+			//fmt.Printf("Found possible gear at %d:%d\n", y, x)
 			adjacentNumbers := []int{}
 			for _, num := range m.Nums {
 				for _, pos := range num.GetPositionsAround() {
 					if pos.X == x && pos.Y == y {
-						fmt.Printf("  - found adjacent number %d\n", num.Value)
+						//fmt.Printf("  - found adjacent number %d\n", num.Value)
 						adjacentNumbers = append(adjacentNumbers, num.Value)
 						break
 					}
