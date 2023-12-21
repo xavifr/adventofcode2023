@@ -18,6 +18,7 @@ func main() {
 	_ = daysRepo.Add(6, &Application.Day6{})
 	_ = daysRepo.Add(7, &Application.Day7{})
 	_ = daysRepo.Add(8, &Application.Day8{})
+	_ = daysRepo.Add(9, &Application.Day9{})
 
 	if len(os.Args) > 1 {
 		dayString := os.Args[1]

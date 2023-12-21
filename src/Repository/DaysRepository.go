@@ -34,61 +34,60 @@ func (dr *DaysRepository) Execute(day int) error {
 
 	var errExecute error
 
-	demoFileP1, err := dr.getInputPart(day, DemoInput, Part1)
-	if err != nil {
-		return fmt.Errorf("error getting input for day %d:%s:%s => %s", day, DemoInput, Part1, err)
-	}
-	defer demoFileP1.Close()
+	demoFileP1, errDemo1 := dr.getInputPart(day, DemoInput, Part1)
+	if errDemo1 == nil {
+		defer demoFileP1.Close()
 
-	fmt.Println("----------------------------------------")
-	fmt.Printf("Executing DEMO day%d:%s\n", day, Part1)
-	fmt.Println("----------------------------------------")
-	errExecute = handler.Part1(bufio.NewScanner(demoFileP1))
-	if errExecute != nil {
-		return fmt.Errorf("error executing day %d:%s:%s => %s", day, DemoInput, Part1, errExecute)
+		fmt.Println("----------------------------------------")
+		fmt.Printf("Executing DEMO day%d:%s\n", day, Part1)
+		fmt.Println("----------------------------------------")
+		errExecute = handler.Part1(bufio.NewScanner(demoFileP1))
+		if errExecute != nil {
+			return fmt.Errorf("error executing day %d:%s:%s => %s", day, DemoInput, Part1, errExecute)
+		}
+		fmt.Println()
 	}
-	fmt.Println()
 
-	finalFile, err := dr.getInput(day, FinalInput)
-	if err != nil {
-		return fmt.Errorf("error getting input for day %d:%s => %s", day, FinalInput, err)
+	finalFile, errFinal := dr.getInput(day, FinalInput)
+	if errFinal == nil {
+		defer finalFile.Close()
+
+		fmt.Println("----------------------------------------")
+		fmt.Printf("Executing FINAL day%d:%s\n", day, Part1)
+		fmt.Println("----------------------------------------")
+		errExecute = handler.Part1(bufio.NewScanner(finalFile))
+		if errExecute != nil {
+			return fmt.Errorf("error executing day %d:%s:%s => %s", day, FinalInput, Part1, errExecute)
+		}
+		fmt.Println()
 	}
-	defer finalFile.Close()
 
-	fmt.Println("----------------------------------------")
-	fmt.Printf("Executing FINAL day%d:%s\n", day, Part1)
-	fmt.Println("----------------------------------------")
-	errExecute = handler.Part1(bufio.NewScanner(finalFile))
-	if errExecute != nil {
-		return fmt.Errorf("error executing day %d:%s:%s => %s", day, FinalInput, Part1, errExecute)
+	demoFileP2, errDemo2 := dr.getInputPart(day, DemoInput, Part2)
+	if errDemo2 == nil {
+		defer demoFileP2.Close()
+
+		fmt.Println("----------------------------------------")
+		fmt.Printf("Executing DEMO day%d:%s\n", day, Part2)
+		fmt.Println("----------------------------------------")
+		errExecute = handler.Part2(bufio.NewScanner(demoFileP2))
+		if errExecute != nil {
+			return fmt.Errorf("error executing day %d:%s:%s => %s", day, DemoInput, Part2, errExecute)
+		}
+		fmt.Println()
 	}
-	fmt.Println()
 
-	demoFileP2, err := dr.getInputPart(day, DemoInput, Part2)
-	if err != nil {
-		return fmt.Errorf("error getting input for day %d:%s:%s => %s", day, DemoInput, Part2, err)
+	if errFinal == nil {
+		finalFile.Seek(0, 0)
+
+		fmt.Println("----------------------------------------")
+		fmt.Printf("Executing FINAL day%d:%s\n", day, Part2)
+		fmt.Println("----------------------------------------")
+		errExecute = handler.Part2(bufio.NewScanner(finalFile))
+		if errExecute != nil {
+			return fmt.Errorf("error executing day %d:%s:%s => %s", day, FinalInput, Part2, errExecute)
+		}
+		fmt.Println()
 	}
-	defer demoFileP2.Close()
-
-	fmt.Println("----------------------------------------")
-	fmt.Printf("Executing DEMO day%d:%s\n", day, Part2)
-	fmt.Println("----------------------------------------")
-	errExecute = handler.Part2(bufio.NewScanner(demoFileP2))
-	if errExecute != nil {
-		return fmt.Errorf("error executing day %d:%s:%s => %s", day, DemoInput, Part2, errExecute)
-	}
-	fmt.Println()
-
-	finalFile.Seek(0, 0)
-
-	fmt.Println("----------------------------------------")
-	fmt.Printf("Executing FINAL day%d:%s\n", day, Part2)
-	fmt.Println("----------------------------------------")
-	errExecute = handler.Part2(bufio.NewScanner(finalFile))
-	if errExecute != nil {
-		return fmt.Errorf("error executing day %d:%s:%s => %s", day, FinalInput, Part2, errExecute)
-	}
-	fmt.Println()
 
 	return nil
 }
